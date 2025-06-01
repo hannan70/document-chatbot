@@ -66,24 +66,23 @@ if uploaded_files  and "vector_store" not in st.session_state:
 
     # handle vector embedding for documents
     def create_vector_embedding():
-        if "vector_store" not in st.session_state:
-            # embedding step
-            embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-            # document loading step
-            all_docs = []
-            for loader in loaders:
-                loaded = loader.load()
-                if loaded:
-                    all_docs.extend(loaded) 
-            # split the document text
-            text_spliter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=300)
-            # final split document
-            final_documents = text_spliter.split_documents(all_docs)
-            if not final_documents:
-                st.error("Document splitting failed. No chunks were generated.")
-                st.stop()
-            # create vector store db
-            st.session_state.vector_store = Chroma.from_documents(final_documents, embeddings) 
+        # embedding step
+        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        # document loading step
+        all_docs = []
+        for loader in loaders:
+            loaded = loader.load()
+            if loaded:
+                all_docs.extend(loaded) 
+        # split the document text
+        text_spliter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=300)
+        # final split document
+        final_documents = text_spliter.split_documents(all_docs)
+        if not final_documents:
+            st.error("Document splitting failed. No chunks were generated.")
+            st.stop()
+        # create vector store db
+        st.session_state.vector_store = Chroma.from_documents(final_documents, embeddings) 
 
 
     with st.spinner("Embedding.... Please wait some thime"):
