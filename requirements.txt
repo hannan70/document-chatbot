@@ -9,3 +9,4 @@ streamlit
 langchain-core
 langchain-chroma
 pypdf
+sentence-transformers
